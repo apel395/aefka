@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pengaturan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}"> -->
+    <script src="{{url_for('static',filename='js/jquery.js')}}"></script>
+    <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+</head>
+<body>
+    <form action="/front" method="POST" class="form">
+        <div>
+            {% for i in result %}
+            <label>{{i}}</label>
+            <input class="form-control" type="checkbox" name="{{i}}">
+            {% endfor %}
+        </div>
+    </form>
+</body>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" align="center">
+              Copyright &copy; 2019 Halotec Indonesia 
+            </div>
+        </div>
+    </div>
+</footer>
+</html>
+
+<script>
+$(document).ready(function(){
+    $(".nav-tabs a").click(function(){
+      $(this).tab('show');
+    });
+    var clock = $("#clock");
+  
+      setInterval(() => {
+          fetch("{{ url_for('time_feed') }}")
+          .then(response => {
+                  response.text().then(t => {$(clock).html(t)})
+              });
+          }, 60*1000);  
+  });
+</script>
+  

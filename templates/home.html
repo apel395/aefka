@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pengaturan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/css.css') }}">-->
+  <script src="{{url_for('static',filename='js/jquery.js')}}"></script>
+  <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+<style>
+.button-container form,
+.button-container form div {
+    display: inline;
+}
+
+.button-container button {
+    display: inline;
+    vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <center><h2>Raspi {{gatename}} - {{gateip}} </h2><h3><span id="clock">{{date}}</span></h3></center><hr>
+   <div class="button-container">
+    <form action="/gatein" method="POST">
+     <div>
+      <button type="submit" class="btn btn-primary">Gate Open</button>
+     </div>
+    </form>
+    <form action="/error" method="POST">
+     <div>
+      <button type="submit" class="btn btn-danger" >Gate Error</button>
+     </div>
+    </form>
+    <form action="/boomopen" method="POST">
+     <div>
+      <button type="submit" class="btn btn-primary" >Boom Open</button>
+     </div>
+    </form>
+    <form action="/boomclose" method="POST">
+     <div>
+      <button type="submit" class="btn btn-danger" >Boom Close</button>
+     </div>
+    </form>
+
+    <form action="/test" method="POST">
+     <div>
+      <input type="text" name="test"/>	
+      <button type="submit" class="btn" >Gate Test</button>
+     </div>
+    </form>
+   </div>
+  <br/>
+  <form method="POST" action="/" class="form">
+  <button type="submit" onclick="alert('done')" class="btn btn-success">Save Config!</button> </br></br>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#general">General</a></li>
+    <li><a href="#device">Device</a></li>
+    <li><a href="#server">Server</a></li>
+    <li><a href="#gate">Gate</a></li>
+    <li><a href="#adam">Adam</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="general" class="tab-pane fade in active">
+      {% for i,j in zip(formgen,genval) %}
+      <div class="form-group">
+        <label>{{i}}</label>
+        <input class="form-control" type="text" name="{{i}}" value="{{j}}">
+      </div>
+      {% endfor %}
+    </div>
+    <div id="device" class="tab-pane fade">
+      {% for i,j in zip(formdev,deval) %}
+      <div class="form-group">
+        <label>{{i}}</label>
+        <input class="form-control" type="text" name="{{i}}" value="{{j}}">
+      </div>
+      {% endfor %}
+    </div>
+    <div id="server" class="tab-pane fade">
+      {% for i,j in zip(formser,serval) %}
+      <div class="form-group">
+        <label>{{i}}</label>
+        <input class="form-control" type="text" name="{{i}}" value="{{j}}">
+      </div>
+      {% endfor %}  
+    </div>
+    <div id="gate" class="tab-pane fade">
+      {% for i,j in zip(formgate,gateval) %}
+      <div class="form-group">
+        <label>{{i}}</label>
+        <input class="form-control" type="text" name="{{i}}" value="{{j}}">
+      </div>
+      {% endfor %}
+    </div>
+     <div id="adam" class="tab-pane fade">
+      {% for i,j in zip(formadam,adamval) %}
+      <div class="form-group">
+        <label>{{i}}</label>
+        <input class="form-control" type="text" name="{{i}}" value="{{j}}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  </form>
+</div>
+</body>
+  <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" align="center">
+                  Copyright &copy; 2019 Halotec Indonesia 
+                </div>
+            </div>
+        </div>
+    </footer>
+</html>
+
+<script>
+$(document).ready(function(){
+  $(".nav-tabs a").click(function(){
+    $(this).tab('show');
+  });
+  var clock = $("#clock");
+
+    setInterval(() => {
+        fetch("{{ url_for('time_feed') }}")
+        .then(response => {
+                response.text().then(t => {$(clock).html(t)})
+            });
+        }, 60*1000);  
+});
+</script>
